@@ -1,52 +1,59 @@
 import React, { useState } from 'react';
+import Proyectos from './proyectos';
 
 function App() {
-  const [usuario, setUsuario] = useState('marielac');
-  const [password, setPassword] = useState('1234');
+  const [user, setUsuario] = useState('');
+  const [contra, setPassword] = useState('');
+  const [respuesta, setRespuesta] = useState(false);
 
   const handleOK = async () => {
-    const data = { usuario: 'marielac', password: '1234' };
+    const data = { usuario: user, password: contra };
 
     try {
       // Realizar una solicitud POST a la URL de destino
-      const response = await fetch('http://centurion.key-city.com', {
+      const response = await fetch('http://localhost:3010/sesion', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', // Asegurarse de que estamos enviando JSON
         },
         body: JSON.stringify(data), // Convertir el objeto de datos a JSON
       });
-
+debugger
       // Verificar si la solicitud fue exitosa
       if (!response.ok) {
         alert('Error en la solicitud');
         return;
       }
 
+      setRespuesta(true);
       // Si la solicitud fue exitosa, redirigir a la URL
-      window.location.href = 'http://centurion.key-city.com';
+      // window.location.href = 'http://centurion.key-city.com';
     } catch (error) {
       console.error('Error en la solicitud:', error);
       alert('Hubo un problema al enviar los datos');
     }
   };
 
-  return (
-    <div>
-      <label>Usuario</label>
-      <input
-        value={usuario}
-        onChange={(e) => setUsuario(e.target.value)}
-      />
-      <label>Contraseña</label>
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleOK}>Entrar</button>
-    </div>
-  );
+  if (respuesta) {
+    return (
+      <Proyectos />
+    );
+  } else {
+    return (
+      <div>
+        <label>Usuario</label>
+        <input
+          onChange={(e) => setUsuario(e.target.value)}
+        />
+        <label>Contraseña</label>
+        <input
+          type="password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button onClick={handleOK}>Entrar</button>
+      </div>
+    );
+  }
 }
 
 export default App;
