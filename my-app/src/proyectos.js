@@ -1,42 +1,41 @@
 import React from 'react';
 
 function Proyectos() {
-    const handleOK = async () => {
-        const data = { Email: 'mchirinos@trafficlight.mx', Rol: 'CenturionAdmi', Proyecto: ['Puebla', 'PROYECTO 1'] };
 
+    const handleOK = async (proy) => {
         try {
-            // Realizar una solicitud POST a la URL de destino
-            const response = await fetch('http://localhost:3010/Centurion', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json', // Asegurarse de que estamos enviando JSON
-                },
-                body: JSON.stringify(data), // Convertir el objeto de datos a JSON
-            });
-debugger
-            // Verificar si la solicitud fue exitosa
-            if (!response.ok) {
-                alert('Error en la solicitud');
-                return;
-            }
+            const Email = 'mchirinos@trafficlight.mx'; //'joropeza@trafficlight.mx';
+            const Proyecto = ['Puebla', proy];
 
-            // Si la solicitud fue exitosa, redirigir a la URL
-            // window.location.href = 'http://centurion.key-city.com';
-            window.location.href = 'http://localhost:3000';
+            const userData = {
+                Email
+            };
+            debugger
+            const DataJSON = JSON.stringify(userData, null, 2); // Le da formato
+
+            const response = await fetch('http://192.168.3.77:8000/auth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: DataJSON,
+            });
+
+            if (!response.ok)
+                throw new Error(response.detail);
+
+            // Redirigir con la URL construida
+            window.location.href = `http://localhost:3000/Sesion?Email=${encodeURIComponent(Email)}&Proyecto=${encodeURIComponent(Proyecto.join(','))}`;
         } catch (error) {
-            console.error('Error en la solicitud:', error);
-            alert('Hubo un problema al enviar los datos');
+            console.error(error.message);
         }
     };
 
     return (
         <div>
-            <button onClick={handleOK}>Proyecto 1</button>
-            <button onClick={handleOK}>Proyecto 2</button>
-            <button onClick={handleOK}>Proyecto 3</button>
-            <button onClick={handleOK}>Proyecto 4</button>
-            <button onClick={handleOK}>Proyecto 5</button>
-            <button onClick={handleOK}>Proyecto 6</button>
+            <button onClick={() => handleOK('Perseo')}>Perseo</button>
+            <button onClick={() => handleOK('ALQUIMIA')}>ALQUIMIA</button>
+            <button onClick={() => handleOK('Proyecto 3')}>Proyecto 3</button>
+            <button onClick={() => handleOK('Proyecto 4')}>Proyecto 4</button>
+            <button onClick={() => handleOK('Proyecto 5')}>Proyecto 5</button>
         </div>
     );
 }
